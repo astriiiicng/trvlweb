@@ -13,5 +13,16 @@
         { "src": "/favicon.ico", "dest": "/favicon.ico" },
         { "src": "/robots.txt", "dest": "/robots.txt" },
         { "src": "/(.*)", "dest": "/api/index.php" }
-    ]
+    ],
+    "env": {
+        "APP_ENV": "production",
+        "APP_DEBUG": "true",
+        "APP_KEY": "base64:nM9Duncmlfx5WWD6R3SwuGlLNNx7Ak+VpgnfOaP0qOA=",
+        "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
+        "SESSION_DRIVER": "cookie",
+        "CACHE_STORE": "array",
+        "LOG_CHANNEL": "stderr",
+        "DB_CONNECTION": "sqlite",
+        "DB_DATABASE": "/tmp/storage/database.sqlite"
+    }
 }
