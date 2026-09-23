@@ -17,8 +17,13 @@ foreach ([
 }
 
 // APP_PACKAGES_CACHE and APP_SERVICES_CACHE (set in vercel.json) point here
-// so the directory must exist before Laravel tries to write cache files
 @mkdir('/tmp/bootstrap/cache', 0777, true);
+if (!file_exists('/tmp/bootstrap/cache/packages.php') && file_exists(__DIR__ . '/../bootstrap/cache/packages.php')) {
+    @copy(__DIR__ . '/../bootstrap/cache/packages.php', '/tmp/bootstrap/cache/packages.php');
+}
+if (!file_exists('/tmp/bootstrap/cache/services.php') && file_exists(__DIR__ . '/../bootstrap/cache/services.php')) {
+    @copy(__DIR__ . '/../bootstrap/cache/services.php', '/tmp/bootstrap/cache/services.php');
+}
 
 // Create SQLite database file
 if (!file_exists($tmpStorage . '/database.sqlite')) {
