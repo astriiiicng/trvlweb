@@ -25,9 +25,15 @@ if (!file_exists('/tmp/bootstrap/cache/services.php') && file_exists(__DIR__ . '
     @copy(__DIR__ . '/../bootstrap/cache/services.php', '/tmp/bootstrap/cache/services.php');
 }
 
+// Normalize script name so Laravel routes starting with /api/ aren't stripped by Symfony's baseUrl resolver
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['PHP_SELF'] = '/index.php';
+
 // Create SQLite database file
-if (!file_exists($tmpStorage . '/database.sqlite')) {
+$isNewDb = false;
+if (!file_exists($tmpStorage . '/database.sqlite') || filesize($tmpStorage . '/database.sqlite') === 0) {
     @touch($tmpStorage . '/database.sqlite');
+    $isNewDb = true;
 }
 
 try {
@@ -39,6 +45,14 @@ try {
     $app = require_once __DIR__ . '/../bootstrap/app.php';
 
     $app->useStoragePath($tmpStorage);
+
+    if ($isNewDb) {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        } catch (\Throwable $mErr) {
+            error_log('Migration failed: ' . $mErr->getMessage());
+        }
+    }
 
     $app->handleRequest(\Illuminate\Http\Request::capture());
 
