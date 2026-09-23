@@ -48,8 +48,10 @@ try {
 
     // Ensure sqlite database tables exist
     try {
-        if (!\Illuminate\Support\Facades\Schema::hasTable('trips')) {
-            \Illuminate\Support\Facades\Schema::create('trips', function (\Illuminate\Database\Schema\Blueprint $table) {
+        $db = $app->make('db');
+        $schema = $db->connection()->getSchemaBuilder();
+        if (!$schema->hasTable('trips')) {
+            $schema->create('trips', function (\Illuminate\Database\Schema\Blueprint $table) {
                 $table->id();
                 $table->string('destination', 150);
                 $table->date('start_date');
