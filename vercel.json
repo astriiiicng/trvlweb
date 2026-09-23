@@ -31,16 +31,16 @@
     ],
     "env": {
         "APP_NAME": "Travelplanner",
-        "APP_URL": "https://trvlweb-kohl.vercel.app",
+        "APP_URL": "https://trvlweb.vercel.app",
         "APP_ENV": "production",
         "APP_DEBUG": "true",
         "APP_KEY": "base64:nM9Duncmlfx5WWD6R3SwuGlLNNx7Ak+VpgnfOaP0qOA=",
-        "APP_MAINTENANCE_DRIVER": "file",
         "APP_PACKAGES_CACHE": "/tmp/bootstrap/cache/packages.php",
         "APP_SERVICES_CACHE": "/tmp/bootstrap/cache/services.php",
         "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
         "SESSION_DRIVER": "cookie",
         "CACHE_STORE": "array",
+        "APP_MAINTENANCE_DRIVER": "file",
         "LOG_CHANNEL": "stderr",
         "DB_CONNECTION": "sqlite",
         "DB_DATABASE": "/tmp/storage/database.sqlite"
