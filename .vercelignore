@@ -9,3 +9,4 @@
 /tests
 /python
 python/
+/bootstrap/cache/*.php

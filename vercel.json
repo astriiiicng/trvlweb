@@ -1,6 +1,8 @@
 {
     "version": 2,
     "framework": null,
+    "installCommand": "composer install --no-dev --optimize-autoloader && npm install",
+    "buildCommand": "npm run build",
     "outputDirectory": "public",
     "functions": {
         "api/index.php": {
@@ -8,15 +10,32 @@
         }
     },
     "routes": [
-        { "src": "/build/(.*)", "dest": "/build/$1" },
-        { "src": "/css/(.*)", "dest": "/css/$1" },
-        { "src": "/favicon.ico", "dest": "/favicon.ico" },
-        { "src": "/robots.txt", "dest": "/robots.txt" },
-        { "src": "/(.*)", "dest": "/api/index.php" }
+        {
+            "src": "/build/(.*)",
+            "dest": "/build/$1"
+        },
+        {
+            "src": "/css/(.*)",
+            "dest": "/css/$1"
+        },
+        {
+            "src": "/favicon.ico",
+            "dest": "/favicon.ico"
+        },
+        {
+            "src": "/robots.txt",
+            "dest": "/robots.txt"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
+        }
     ],
     "env": {
+        "APP_NAME": "Travelplanner",
+        "APP_URL": "https://trvlweb.vercel.app",
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
+        "APP_DEBUG": "false",
         "APP_KEY": "base64:nM9Duncmlfx5WWD6R3SwuGlLNNx7Ak+VpgnfOaP0qOA=",
         "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
         "SESSION_DRIVER": "cookie",
