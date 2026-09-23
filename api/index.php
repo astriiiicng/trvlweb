@@ -46,12 +46,26 @@ try {
 
     $app->useStoragePath($tmpStorage);
 
-    if ($isNewDb) {
-        try {
-            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        } catch (\Throwable $mErr) {
-            error_log('Migration failed: ' . $mErr->getMessage());
+    // Ensure sqlite database tables exist
+    try {
+        if (!\Illuminate\Support\Facades\Schema::hasTable('trips')) {
+            \Illuminate\Support\Facades\Schema::create('trips', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->id();
+                $table->string('destination', 150);
+                $table->date('start_date');
+                $table->date('end_date');
+                $table->integer('jumlah_orang')->default(1);
+                $table->decimal('budget', 15, 2);
+                $table->json('preferences')->nullable();
+                $table->text('context')->nullable();
+                $table->text('summary')->nullable();
+                $table->json('budget_breakdown')->nullable();
+                $table->json('itinerary')->nullable();
+                $table->timestamps();
+            });
         }
+    } catch (\Throwable $dbErr) {
+        error_log('Database schema initialization error: ' . $dbErr->getMessage());
     }
 
     $app->handleRequest(\Illuminate\Http\Request::capture());
