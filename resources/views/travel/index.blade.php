@@ -176,10 +176,14 @@
         @endif
 
 
+        {{-- CLIENT-SIDE ERROR BOX --}}
+        <div id="client-error-box" class="error-message" style="display: none;"></div>
+
         {{-- FORM --}}
 
         <form
-            action="{{ route('travel.plan') }}"
+            id="planner-form"
+            action="{{ url('/travel/plan') }}"
             method="POST"
         >
 
@@ -464,7 +468,7 @@
             destinationSelect.disabled = true;
 
             if (provinceId) {
-                fetch(`/api/wilayah/regencies/${provinceId}`)
+                fetch(`/wilayah/regencies/${provinceId}`)
                     .then(response => response.json())
                     .then(res => {
                         destinationSelect.innerHTML = '<option value="">-- Pilih Kabupaten/Kota --</option>';
@@ -488,10 +492,65 @@
             }
         });
 
-        const form = document.querySelector('form');
+        const form = document.getElementById('planner-form');
         const submitBtn = document.getElementById('btn-submit-plan');
+        const errorBox = document.getElementById('client-error-box');
+
+        function showError(msg) {
+            if (errorBox) {
+                errorBox.textContent = msg;
+                errorBox.style.display = 'block';
+                errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert(msg);
+            }
+        }
+
+        function clearError() {
+            if (errorBox) {
+                errorBox.textContent = '';
+                errorBox.style.display = 'none';
+            }
+        }
+
         if (form && submitBtn) {
-            form.addEventListener('submit', function() {
+            form.addEventListener('submit', function(e) {
+                clearError();
+
+                // 1. Validasi Provinsi
+                if (!provinceSelect.value) {
+                    e.preventDefault();
+                    showError('Silakan pilih Provinsi terlebih dahulu.');
+                    provinceSelect.focus();
+                    return;
+                }
+
+                // 2. Validasi Kabupaten/Kota
+                if (!destinationSelect.value || destinationSelect.disabled) {
+                    e.preventDefault();
+                    showError('Silakan pilih Kabupaten/Kota (Destinasi).');
+                    destinationSelect.focus();
+                    return;
+                }
+
+                // 3. Validasi Kategori Wisata (minimal 1 checkbox dipilih)
+                const checkedPreferences = form.querySelectorAll('input[name="preferences[]"]:checked');
+                if (checkedPreferences.length === 0) {
+                    e.preventDefault();
+                    showError('Silakan pilih minimal 1 Kategori Wisata.');
+                    return;
+                }
+
+                // 4. Validasi Tanggal
+                const startDate = document.getElementById('start_date').value;
+                const endDate = document.getElementById('end_date').value;
+                if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+                    e.preventDefault();
+                    showError('Tanggal selesai harus sama dengan atau setelah tanggal mulai.');
+                    return;
+                }
+
+                // Jika validasi lolos, tampilkan indikator loading
                 submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.8';
                 submitBtn.innerHTML = '⌛ AI sedang menyusun rencana perjalanan... (Mohon tunggu beberapa saat)';

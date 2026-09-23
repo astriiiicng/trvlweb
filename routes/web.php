@@ -9,10 +9,10 @@ Route::get('/', [TravelPlannerController::class, 'index'])
 Route::post('/travel/plan', [TravelPlannerController::class, 'plan'])
     ->name('travel.plan');
 
-Route::get('/api/wilayah/provinces', [TravelPlannerController::class, 'provinces'])
+Route::get('/wilayah/provinces', [TravelPlannerController::class, 'provinces'])
     ->name('api.wilayah.provinces');
 
-Route::get('/api/wilayah/regencies/{code}', [TravelPlannerController::class, 'regencies'])
+Route::get('/wilayah/regencies/{code}', [TravelPlannerController::class, 'regencies'])
     ->name('api.wilayah.regencies');
 
 Route::post('/travel/regenerate-item', [TravelPlannerController::class, 'regenerateItem'])

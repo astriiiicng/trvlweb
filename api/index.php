@@ -35,6 +35,10 @@ try {
 
     $app->useStoragePath($tmpStorage);
 
+    if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+        $_SERVER['HTTPS'] = 'on';
+    }
+
     $app->handleRequest(\Illuminate\Http\Request::capture());
 
 } catch (\Throwable $e) {

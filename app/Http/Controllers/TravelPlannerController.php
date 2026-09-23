@@ -18,7 +18,7 @@ class TravelPlannerController extends Controller
     public function provinces()
     {
         try {
-            $response = Http::timeout(10)->get('https://wilayah.id/api/provinces.json');
+            $response = Http::withoutVerifying()->timeout(15)->get('https://wilayah.id/api/provinces.json');
             return response()->json($response->json() ?? ['data' => []]);
         } catch (\Exception $e) {
             return response()->json(['data' => []], 500);
@@ -28,7 +28,7 @@ class TravelPlannerController extends Controller
     public function regencies($code)
     {
         try {
-            $response = Http::timeout(10)->get("https://wilayah.id/api/regencies/{$code}.json");
+            $response = Http::withoutVerifying()->timeout(15)->get("https://wilayah.id/api/regencies/{$code}.json");
             return response()->json($response->json() ?? ['data' => []]);
         } catch (\Exception $e) {
             return response()->json(['data' => []], 500);
@@ -128,9 +128,11 @@ class TravelPlannerController extends Controller
 
         try {
 
+            $pythonUrl = rtrim(env('PYTHON_AI_URL', 'http://127.0.0.1:8002'), '/');
+
             $response = Http::timeout(600)
                 ->post(
-                    'http://127.0.0.1:8002/plan',
+                    $pythonUrl . '/plan',
                     [
 
                         'destination' =>
@@ -289,7 +291,8 @@ class TravelPlannerController extends Controller
         ]);
 
         try {
-            $response = Http::timeout(120)->post('http://127.0.0.1:8002/regenerate', [
+            $pythonUrl = rtrim(env('PYTHON_AI_URL', 'http://127.0.0.1:8002'), '/');
+            $response = Http::timeout(120)->post($pythonUrl . '/regenerate', [
                 'destination' => $validated['destination'],
                 'category' => $validated['category'],
                 'current_place' => $validated['current_place'],

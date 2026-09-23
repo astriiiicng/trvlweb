@@ -885,4 +885,6 @@ def regenerate_item(request: RegenerateItemRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8002)
+    port = int(os.getenv("PORT", 8002))
+    host = os.getenv("HOST", "0.0.0.0")
+    uvicorn.run(app, host=host, port=port)
